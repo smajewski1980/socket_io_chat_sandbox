@@ -6,6 +6,8 @@ const connQtyElem = document.querySelector(".conn-qty");
 let currentSocketId;
 let currUser = "";
 const currUserSpan = document.querySelector(".curr-user");
+const loginUsername = document.getElementById("username");
+const btnEnter = document.getElementById("btn-enter");
 
 btnSend.addEventListener("click", (e) => {
   e.preventDefault();
@@ -14,23 +16,26 @@ btnSend.addEventListener("click", (e) => {
   console.log("sending new chat message to server");
 });
 
-// function getUserName(id) {
-//   const userObj = currentConnections.filter((con) => con.socketId === id)[0];
-//   const userName = userObj;
-//   if (userName.user !== undefined) {
-//     return userName.user;
-//   } else {
-//     return "something went wrong";
-//   }
-// }
+// test
+function getUserFromUrl() {
+  const queryString = location.search;
+  const idx = queryString.indexOf("=") + 1;
+  const username = queryString.slice(idx);
+  const decodedName = decodeURIComponent(username.replace(/\+/g, " "));
+  console.log(decodedName);
+  return decodedName;
+}
+currUserSpan.textContent = `Username: ${getUserFromUrl()}`;
+
+// test
 
 socket.on("connection", (msg) => {
   connQtyElem.textContent = `there are ${msg.connQty} users in the room`;
   if (!currentSocketId) {
     currentSocketId = msg.msg;
-    currUserSpan.textContent = msg.user;
+    // currUserSpan.textContent = msg.user;
   }
-  currUserSpan.textContent = msg.user;
+  // currUserSpan.textContent = msg.user;
 
   // currUser = currentSocketId;
   // currUserSpan.textContent = currentSocketId;
@@ -52,17 +57,12 @@ socket.on("new-chat-message", (msg) => {
 function updateAttendees(arr) {
   usersDiv.textContent = "";
   arr.forEach((user) => {
-    if (user.socketId === currentSocketId) {
-      currUserSpan.textContent = user.user;
-    }
+    // if (user.socketId === currentSocketId) {
+    //   currUserSpan.textContent = user.user;
+    // }
     usersDiv.textContent += `${user.user}, `;
   });
 }
 socket.on("room-qty-change", (msg) => {
   updateAttendees(msg);
-});
-
-socket.on("server-restart", (msg) => {
-  console.log(msg);
-  location.reload();
 });
