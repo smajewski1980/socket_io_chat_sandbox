@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Test Chat App</h1>
+      <!-- <button id="btn-connect">connect</button> -->
+      <p>you are: <span class="curr-user"></span></p>
+      <form>
+        <input
+          type="text"
+          name="chat-message"
+          id="chat-message"
+          autocomplete="off"
+          placeholder="type a message..."
+        />
+        <button id="send">SEND</button>
+      </form>
+      <p class="conn-qty"></p>
+      <div class="messages"></div>
+      <p>Current users in the room:</p>
+      <div class="current-users"></div>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io({ reconnection: false });
+    </script>
+  </body>
+</html>
