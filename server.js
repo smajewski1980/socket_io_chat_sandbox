@@ -25,13 +25,19 @@ function getUserName(id) {
   }
 }
 
-// at least for now, when the sever restarts i need the clients back to square one...
-// io.emit("server-restart", { msg: "the server restarted" });
-
 io.on("connection", (socket) => {
   currentConnections.push({
     user: `user ${currentUserId}`,
     socketId: socket.id,
+    username: "",
+  });
+  socket.on("newUsername", (newUser) => {
+    const idx = currentConnections.findIndex((item) => {
+      return item.socketId === newUser.userSocketId;
+    });
+    currentConnections[idx].username = newUser.username;
+    io.emit("room-qty-change", currentConnections);
+    io.emit("new-chat-message", `${newUser.username} joined the room.`);
   });
   currentUserId++;
   io.emit("connection", {
@@ -39,13 +45,11 @@ io.on("connection", (socket) => {
     name: getUserName(socket.id),
     connQty: currentConnections.length,
   });
-  // io.emit("new-chat-message", `${getUserName(socket.id)} joined the room.`);
-
   io.emit("room-qty-change", currentConnections);
 
   socket.on("chat-message", (msg) => {
-    if (msg !== "") {
-      io.emit("new-chat-message", `${getUserName(socket.id)}: ${msg}`);
+    if (msg.chatMsg !== "") {
+      io.emit("new-chat-message", `${msg.username}: ${msg.chatMsg}`);
     }
   });
   socket.on("disconnect", (socket) => {
@@ -53,8 +57,10 @@ io.on("connection", (socket) => {
       (conn) => conn.socketId == socket.id
     );
     let userLeft = currentConnections.splice(idx, 1);
+    console.log(userLeft[0].username);
+
     io.emit("user-left-room", { connQty: currentConnections.length });
-    io.emit("new-chat-message", `${userLeft[0].user} left the room.`);
+    io.emit("new-chat-message", `${userLeft[0].username} left the room.`);
     io.emit("room-qty-change", currentConnections);
   });
 });

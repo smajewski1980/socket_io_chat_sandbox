@@ -4,19 +4,21 @@ const usersDiv = document.querySelector(".current-users");
 const chatMessageInput = document.getElementById("chat-message");
 const connQtyElem = document.querySelector(".conn-qty");
 let currentSocketId;
-let currUser = "";
+let currUser = getUserFromUrl();
 const currUserSpan = document.querySelector(".curr-user");
 const loginUsername = document.getElementById("username");
 const btnEnter = document.getElementById("btn-enter");
 
 btnSend.addEventListener("click", (e) => {
   e.preventDefault();
-  socket.emit("chat-message", chatMessageInput.value);
+  socket.emit("chat-message", {
+    chatMsg: chatMessageInput.value,
+    username: currUser,
+  });
   chatMessageInput.value = "";
   console.log("sending new chat message to server");
 });
 
-// test
 function getUserFromUrl() {
   const queryString = location.search;
   const idx = queryString.indexOf("=") + 1;
@@ -25,21 +27,19 @@ function getUserFromUrl() {
   console.log(decodedName);
   return decodedName;
 }
-currUserSpan.textContent = `Username: ${getUserFromUrl()}`;
-
-// test
+currUserSpan.textContent = `Username: ${currUser}`;
 
 socket.on("connection", (msg) => {
   connQtyElem.textContent = `there are ${msg.connQty} users in the room`;
   if (!currentSocketId) {
     currentSocketId = msg.msg;
-    // currUserSpan.textContent = msg.user;
+    console.log(msg.msg);
+    console.log(currUser);
+    socket.emit("newUsername", {
+      userSocketId: msg.msg,
+      username: currUser,
+    });
   }
-  // currUserSpan.textContent = msg.user;
-
-  // currUser = currentSocketId;
-  // currUserSpan.textContent = currentSocketId;
-  // console.log(msg.msg);
 });
 
 socket.on("user-left-room", (msg) => {
@@ -56,11 +56,13 @@ socket.on("new-chat-message", (msg) => {
 
 function updateAttendees(arr) {
   usersDiv.textContent = "";
-  arr.forEach((user) => {
-    // if (user.socketId === currentSocketId) {
-    //   currUserSpan.textContent = user.user;
-    // }
-    usersDiv.textContent += `${user.user}, `;
+  console.log(arr);
+  arr.forEach((user, idx) => {
+    if (idx === arr.length - 1) {
+      usersDiv.textContent += `${user.username}`;
+    } else {
+      usersDiv.textContent += `${user.username}, `;
+    }
   });
 }
 socket.on("room-qty-change", (msg) => {
