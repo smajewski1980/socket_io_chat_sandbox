@@ -8,6 +8,7 @@ let currUser = getUserFromUrl();
 const currUserSpan = document.querySelector(".curr-user");
 const loginUsername = document.getElementById("username");
 const btnEnter = document.getElementById("btn-enter");
+const btnLeave = document.querySelector(".btn-leave");
 
 btnSend.addEventListener("click", (e) => {
   e.preventDefault();
@@ -68,3 +69,11 @@ function updateAttendees(arr) {
 socket.on("room-qty-change", (msg) => {
   updateAttendees(msg);
 });
+
+function handleLeave(e) {
+  e.preventDefault();
+  socket.emit("leave");
+  location.href = "/index.html";
+}
+
+btnLeave.addEventListener("click", handleLeave);

@@ -38,6 +38,7 @@ io.on("connection", (socket) => {
     currentConnections[idx].username = newUser.username;
     io.emit("room-qty-change", currentConnections);
     io.emit("new-chat-message", `${newUser.username} joined the room.`);
+    console.log(newUser.username + " has joined the room");
   });
   currentUserId++;
   io.emit("connection", {
@@ -57,7 +58,7 @@ io.on("connection", (socket) => {
       (conn) => conn.socketId == socket.id
     );
     let userLeft = currentConnections.splice(idx, 1);
-    console.log(userLeft[0].username);
+    console.log(userLeft[0].username + " has left");
 
     io.emit("user-left-room", { connQty: currentConnections.length });
     io.emit("new-chat-message", `${userLeft[0].username} left the room.`);
