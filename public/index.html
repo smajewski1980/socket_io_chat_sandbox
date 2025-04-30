@@ -10,15 +10,23 @@
     <main style="width: 300px">
       <form action="chat.html" id="login-form">
         <label for="username">Your Chat Name</label>
-        <input type="text" name="username" id="username" autocomplete="off" />
+        <input
+          type="text"
+          name="username"
+          id="username"
+          autocomplete="off"
+          required
+        />
         <label for="room-name">Select A Room</label>
         <select name="room-name" id="room-name" required>
           <option value=""></option>
-          <option value="cool">The Cool People Room</option>
-          <option value="loser">The Loser Room</option>
-          <option value="crazy">The Crazy Room</option>
-          <option value="sane">The Sane Room</option>
-          <option value="unicorn">The Land Of Rainbows And Unicorns</option>
+          <option value="The Cool People Room">The Cool People Room</option>
+          <option value="The Loser Room">The Loser Room</option>
+          <option value="The Crazy Room">The Crazy Room</option>
+          <option value="The Sane Room">The Sane Room</option>
+          <option value="The Land Of Rainbows And Unicorns">
+            The Land Of Rainbows And Unicorns
+          </option>
         </select>
         <button class="btn-enter">Enter Chat</button>
       </form>

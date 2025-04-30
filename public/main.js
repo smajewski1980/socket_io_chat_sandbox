@@ -5,11 +5,12 @@ const chatMessageInput = document.getElementById("chat-message");
 const connQtyElem = document.querySelector(".conn-qty");
 let currentSocketId = null;
 let currUser = getQueryVariable("username");
-let currRoom = getQueryVaruable("room-name");
+let currRoom = getQueryVariable("room-name");
 const currUserSpan = document.querySelector(".curr-user");
 const loginUsername = document.getElementById("username");
 const btnEnter = document.getElementById("btn-enter");
 const btnLeave = document.querySelector(".btn-leave");
+const roomNameSpan = document.querySelector("#room-name-span");
 
 btnSend.addEventListener("click", (e) => {
   e.preventDefault();
@@ -28,7 +29,8 @@ function getQueryVariable(variable) {
   for (var i = 0; i < vars.length; i++) {
     var pair = vars[i].split("=");
     if (pair[0] == variable) {
-      return pair[1];
+      // return pair[1];
+      return decodeURIComponent(pair[1].replace(/\+/g, " "));
     }
   }
   return false;
@@ -46,9 +48,12 @@ function getQueryVariable(variable) {
 // **********************
 
 currUserSpan.textContent = `Username: ${currUser}`;
+roomNameSpan.textContent = ` ${currRoom} `;
 
 socket.on("connection", (msg) => {
-  connQtyElem.textContent = `there are ${msg.connQty} users in the room`;
+  connQtyElem.textContent = `there ${msg.connQty === 1 ? "is" : "are"} ${
+    msg.connQty
+  } ${msg.connQty === 1 ? "user" : "users"} in this room`;
 
   console.log(msg.msg);
   // console.log(currUser);
