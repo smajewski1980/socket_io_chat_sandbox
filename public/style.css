@@ -71,6 +71,7 @@ input {
   font-size: 1.125rem;
   padding: 0.25rem;
   border: none;
+  color: var(--clr-dk2-purp);
   outline: 1px solid var(--clr-dk-purp);
 }
 
