@@ -13,7 +13,7 @@ app.get("/", (req, res, next) => {
 });
 
 let currentConnections = [];
-let currentUserId = 1;
+// let currentUserId = 1;
 
 function getUserName(id) {
   const userObj = currentConnections.filter((con) => con.socketId === id)[0];
@@ -26,8 +26,9 @@ function getUserName(id) {
 }
 
 io.on("connection", (socket) => {
+  // console.log("just connected socket id: " + socket.id);
   currentConnections.push({
-    user: `user ${currentUserId}`,
+    // user: `user ${currentUserId}`,
     socketId: socket.id,
     username: "",
   });
@@ -35,12 +36,15 @@ io.on("connection", (socket) => {
     const idx = currentConnections.findIndex((item) => {
       return item.socketId === newUser.userSocketId;
     });
+    // console.log(idx);
+    // console.log(currentConnections);
+
     currentConnections[idx].username = newUser.username;
     io.emit("room-qty-change", currentConnections);
     io.emit("new-chat-message", `${newUser.username} joined the room.`);
-    console.log(newUser.username + " has joined the room");
+    // console.log(newUser.username + " has joined the room");
   });
-  currentUserId++;
+  // currentUserId++;
   io.emit("connection", {
     msg: socket.id,
     name: getUserName(socket.id),
@@ -55,10 +59,13 @@ io.on("connection", (socket) => {
   });
   socket.on("disconnect", (socket) => {
     const idx = currentConnections.findIndex(
-      (conn) => conn.socketId == socket.id
+      (conn) => conn.socketId === socket.id
     );
+    console.log(idx);
+    console.log(currentConnections);
     let userLeft = currentConnections.splice(idx, 1);
     console.log(userLeft[0].username + " has left");
+    console.log(currentConnections);
 
     io.emit("user-left-room", { connQty: currentConnections.length });
     io.emit("new-chat-message", `${userLeft[0].username} left the room.`);

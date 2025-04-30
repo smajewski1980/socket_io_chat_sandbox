@@ -3,7 +3,7 @@ const messagesDiv = document.querySelector(".messages");
 const usersDiv = document.querySelector(".current-users");
 const chatMessageInput = document.getElementById("chat-message");
 const connQtyElem = document.querySelector(".conn-qty");
-let currentSocketId;
+let currentSocketId = null;
 let currUser = getUserFromUrl();
 const currUserSpan = document.querySelector(".curr-user");
 const loginUsername = document.getElementById("username");
@@ -25,22 +25,23 @@ function getUserFromUrl() {
   const idx = queryString.indexOf("=") + 1;
   const username = queryString.slice(idx);
   const decodedName = decodeURIComponent(username.replace(/\+/g, " "));
-  console.log(decodedName);
+  // console.log(decodedName);
   return decodedName;
 }
 currUserSpan.textContent = `Username: ${currUser}`;
 
 socket.on("connection", (msg) => {
   connQtyElem.textContent = `there are ${msg.connQty} users in the room`;
-  if (!currentSocketId) {
-    currentSocketId = msg.msg;
-    console.log(msg.msg);
-    console.log(currUser);
+
+  console.log(msg.msg);
+  // console.log(currUser);
+  if (currentSocketId === null) {
     socket.emit("newUsername", {
       userSocketId: msg.msg,
       username: currUser,
     });
   }
+  currentSocketId = msg.msg;
 });
 
 socket.on("user-left-room", (msg) => {
