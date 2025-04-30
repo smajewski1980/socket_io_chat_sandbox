@@ -57,10 +57,11 @@ io.on("connection", (socket) => {
       io.emit("new-chat-message", `${msg.username}: ${msg.chatMsg}`);
     }
   });
-  socket.on("disconnect", (socket) => {
+  socket.on("disconnect", () => {
     const idx = currentConnections.findIndex(
       (conn) => conn.socketId === socket.id
     );
+    console.log(socket.id);
     console.log(idx);
     console.log(currentConnections);
     let userLeft = currentConnections.splice(idx, 1);

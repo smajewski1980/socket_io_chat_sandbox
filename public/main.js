@@ -42,6 +42,7 @@ socket.on("connection", (msg) => {
     });
   }
   currentSocketId = msg.msg;
+  console.log(currentSocketId);
 });
 
 socket.on("user-left-room", (msg) => {
