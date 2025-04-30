@@ -45,8 +45,9 @@ h1 + p {
 }
 
 button {
+  border-radius: 999px;
   cursor: pointer;
-  padding-block: 0.65rem;
+  padding-block: 1.25rem;
   width: 100%;
   background-color: var(--clr-lt-purp);
   border: none;
@@ -66,7 +67,8 @@ button:focus-visible {
   background-color: var(--clr-lt-purp-hov);
 }
 
-input {
+input,
+select {
   display: block;
   width: 100%;
   font-size: 1.125rem;
@@ -74,6 +76,10 @@ input {
   border: none;
   color: var(--clr-dk2-purp);
   outline: 1px solid var(--clr-dk-purp);
+}
+
+select {
+  margin-block: 0.5rem 1rem;
 }
 
 ::placeholder {

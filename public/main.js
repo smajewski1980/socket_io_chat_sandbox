@@ -4,7 +4,8 @@ const usersDiv = document.querySelector(".current-users");
 const chatMessageInput = document.getElementById("chat-message");
 const connQtyElem = document.querySelector(".conn-qty");
 let currentSocketId = null;
-let currUser = getUserFromUrl();
+let currUser = getQueryVariable("username");
+let currRoom = getQueryVaruable("room-name");
 const currUserSpan = document.querySelector(".curr-user");
 const loginUsername = document.getElementById("username");
 const btnEnter = document.getElementById("btn-enter");
@@ -20,14 +21,30 @@ btnSend.addEventListener("click", (e) => {
   console.log("sending new chat message to server");
 });
 
-function getUserFromUrl() {
-  const queryString = location.search;
-  const idx = queryString.indexOf("=") + 1;
-  const username = queryString.slice(idx);
-  const decodedName = decodeURIComponent(username.replace(/\+/g, " "));
-  // console.log(decodedName);
-  return decodedName;
+// going to try this func
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  return false;
 }
+// **********************
+
+// function getUserFromUrl() {
+//   const queryString = location.search;
+//   const idx = queryString.indexOf("=") + 1;
+//   const username = queryString.slice(idx);
+//   const decodedName = decodeURIComponent(username.replace(/\+/g, " "));
+//   // console.log(decodedName);
+//   return decodedName;
+// }
+// **********************
+
 currUserSpan.textContent = `Username: ${currUser}`;
 
 socket.on("connection", (msg) => {
