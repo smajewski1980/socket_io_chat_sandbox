@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
     console.log(currentConnections);
 
     io.emit("user-left-room", { connQty: currentConnections.length });
-    io.emit("new-chat-message", {
+    io.to(userLeft[0].room).emit("new-chat-message", {
       message: `${userLeft[0].username} left the room.`,
     });
     io.emit("room-qty-change", currentConnections);
