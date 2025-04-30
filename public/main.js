@@ -12,17 +12,6 @@ const btnEnter = document.getElementById("btn-enter");
 const btnLeave = document.querySelector(".btn-leave");
 const roomNameSpan = document.querySelector("#room-name-span");
 
-btnSend.addEventListener("click", (e) => {
-  e.preventDefault();
-  socket.emit("chat-message", {
-    chatMsg: chatMessageInput.value,
-    username: currUser,
-  });
-  chatMessageInput.value = "";
-  console.log("sending new chat message to server");
-});
-
-// going to try this func
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
@@ -35,17 +24,6 @@ function getQueryVariable(variable) {
   }
   return false;
 }
-// **********************
-
-// function getUserFromUrl() {
-//   const queryString = location.search;
-//   const idx = queryString.indexOf("=") + 1;
-//   const username = queryString.slice(idx);
-//   const decodedName = decodeURIComponent(username.replace(/\+/g, " "));
-//   // console.log(decodedName);
-//   return decodedName;
-// }
-// **********************
 
 currUserSpan.textContent = `Username: ${currUser}`;
 roomNameSpan.textContent = ` ${currRoom} `;
@@ -61,6 +39,7 @@ socket.on("connection", (msg) => {
     socket.emit("newUsername", {
       userSocketId: msg.msg,
       username: currUser,
+      room: currRoom,
     });
   }
   currentSocketId = msg.msg;
@@ -89,8 +68,11 @@ socket.on("new-chat-message", (msg) => {
 function updateAttendees(arr) {
   usersDiv.textContent = "";
   console.log(arr);
-  arr.forEach((user, idx) => {
-    if (idx === arr.length - 1) {
+  const filteredArr = arr.filter((obj) => {
+    return obj.room === currRoom;
+  });
+  filteredArr.forEach((user, idx) => {
+    if (idx === filteredArr.length - 1) {
       usersDiv.textContent += `${user.username}`;
     } else {
       usersDiv.textContent += `${user.username}, `;
@@ -108,3 +90,13 @@ function handleLeave(e) {
 }
 
 btnLeave.addEventListener("click", handleLeave);
+btnSend.addEventListener("click", (e) => {
+  e.preventDefault();
+  socket.emit("chat-message", {
+    chatMsg: chatMessageInput.value,
+    username: currUser,
+    room: currRoom,
+  });
+  chatMessageInput.value = "";
+  console.log("sending new chat message to server");
+});

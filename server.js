@@ -24,6 +24,12 @@ function getUserName(id) {
     return "something went wrong";
   }
 }
+// is the below func working???
+const getRoomName = (id) => {
+  const userObj = currentConnections.filter((con) => con.socketId === id)[0];
+  const room = userObj.room;
+  return room;
+};
 
 io.on("connection", (socket) => {
   // console.log("just connected socket id: " + socket.id);
@@ -31,32 +37,48 @@ io.on("connection", (socket) => {
     // user: `user ${currentUserId}`,
     socketId: socket.id,
     username: "",
+    room: "",
   });
+
   socket.on("newUsername", (newUser) => {
     const idx = currentConnections.findIndex((item) => {
       return item.socketId === newUser.userSocketId;
     });
+    currIdx = idx;
     // console.log(idx);
     // console.log(currentConnections);
 
     currentConnections[idx].username = newUser.username;
-    io.emit("room-qty-change", currentConnections);
-    io.emit("new-chat-message", {
+    currentConnections[idx].room = newUser.room;
+
+    socket.join(newUser.room);
+
+    io.to(newUser.room).emit("room-qty-change", currentConnections);
+    io.to(newUser.room).emit("new-chat-message", {
       message: `${newUser.username} joined the room.`,
     });
     // console.log(newUser.username + " has joined the room");
   });
   // currentUserId++;
+
+  // the next two emits need to have acces to the room
   io.emit("connection", {
     msg: socket.id,
     name: getUserName(socket.id),
     connQty: currentConnections.length,
   });
+
   io.emit("room-qty-change", currentConnections);
+  // console.log(
+  //   "this is supposed to be the room name: " + getRoomName(socket.id)
+  // );
+  // console.log("socketid: " + socket.id);
+  // console.log("curr connections: " + currentConnections[0].socketId);
+  // ****************
 
   socket.on("chat-message", (msg) => {
     if (msg.chatMsg !== "") {
-      io.emit("new-chat-message", {
+      io.to(msg.room).emit("new-chat-message", {
         username: msg.username,
         message: msg.chatMsg,
       });
