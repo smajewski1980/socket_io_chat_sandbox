@@ -41,7 +41,9 @@ io.on("connection", (socket) => {
 
     currentConnections[idx].username = newUser.username;
     io.emit("room-qty-change", currentConnections);
-    io.emit("new-chat-message", `${newUser.username} joined the room.`);
+    io.emit("new-chat-message", {
+      message: `${newUser.username} joined the room.`,
+    });
     // console.log(newUser.username + " has joined the room");
   });
   // currentUserId++;
@@ -54,7 +56,10 @@ io.on("connection", (socket) => {
 
   socket.on("chat-message", (msg) => {
     if (msg.chatMsg !== "") {
-      io.emit("new-chat-message", `${msg.username}: ${msg.chatMsg}`);
+      io.emit("new-chat-message", {
+        username: msg.username,
+        message: msg.chatMsg,
+      });
     }
   });
   socket.on("disconnect", () => {
@@ -69,7 +74,9 @@ io.on("connection", (socket) => {
     console.log(currentConnections);
 
     io.emit("user-left-room", { connQty: currentConnections.length });
-    io.emit("new-chat-message", `${userLeft[0].username} left the room.`);
+    io.emit("new-chat-message", {
+      message: `${userLeft[0].username} left the room.`,
+    });
     io.emit("room-qty-change", currentConnections);
   });
 });

@@ -52,7 +52,14 @@ socket.on("user-left-room", (msg) => {
 socket.on("new-chat-message", (msg) => {
   const pElem = document.createElement("p");
   pElem.classList.add("message");
-  pElem.textContent = msg;
+  pElem.textContent = ` ${msg.message}`;
+
+  if (msg.username) {
+    const spanElem = document.createElement("span");
+    spanElem.classList.add("msg-user-span");
+    spanElem.textContent = `${msg.username}:`;
+    pElem.prepend(spanElem);
+  }
 
   messagesDiv.prepend(pElem);
 });
