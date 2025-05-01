@@ -29,12 +29,16 @@ currUserSpan.textContent = `Username: ${currUser}`;
 roomNameSpan.textContent = ` ${currRoom} `;
 
 socket.on("connection", (msg) => {
-  connQtyElem.textContent = `there ${msg.connQty === 1 ? "is" : "are"} ${
-    msg.connQty
-  } ${msg.connQty === 1 ? "user" : "users"} in this room`;
+  const filteredList = msg.connQty.filter((msg) => msg.room === currRoom);
+  const qty = filteredList.length;
+  console.log("filtered list: " + filteredList);
+  console.log("qty: " + qty);
+
+  connQtyElem.textContent = `there ${qty === 1 ? "is" : "are"} ${qty} ${
+    qty === 1 ? "user" : "users"
+  } in this room`;
 
   console.log(msg.msg);
-  // console.log(currUser);
   if (currentSocketId === null) {
     socket.emit("newUsername", {
       userSocketId: msg.msg,
@@ -44,10 +48,6 @@ socket.on("connection", (msg) => {
   }
   currentSocketId = msg.msg;
   console.log(currentSocketId);
-});
-
-socket.on("user-left-room", (msg) => {
-  connQtyElem.textContent = `there are ${msg.connQty} users in the room`;
 });
 
 socket.on("new-chat-message", (msg) => {
@@ -71,6 +71,9 @@ function updateAttendees(arr) {
   const filteredArr = arr.filter((obj) => {
     return obj.room === currRoom;
   });
+  const qty = filteredArr.length;
+  connQtyElem.textContent = `there are ${qty} users in the room`;
+
   filteredArr.forEach((user, idx) => {
     if (idx === filteredArr.length - 1) {
       usersDiv.textContent += `${user.username}`;
