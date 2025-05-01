@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
     io.to(newUser.room).emit("room-qty-change", currentConnections);
     io.to(newUser.room).emit("new-chat-message", {
       message: `${newUser.username} joined the room.`,
+      joining: true,
     });
   });
   io.emit("connection", {
@@ -77,6 +78,7 @@ io.on("connection", (socket) => {
 
     io.to(room).emit("new-chat-message", {
       message: `${userLeft[0].username} left the room.`,
+      joining: true,
     });
     io.emit("room-qty-change", currentConnections);
   });

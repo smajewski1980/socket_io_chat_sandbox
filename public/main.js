@@ -48,7 +48,16 @@ socket.on("connection", (msg) => {
 
 socket.on("new-chat-message", (msg) => {
   const pElem = document.createElement("p");
-  pElem.classList.add("message");
+  // need to see if i can make each users own messages justify left
+  if (msg.joining) {
+    pElem.classList.add("joining");
+  } else if (msg.username === currUser) {
+    pElem.classList.add("my-msg");
+  } else {
+    pElem.classList.add("message");
+  }
+  // msg.joining ? pElem.classList.add("joining") : pElem.classList.add("message");
+
   pElem.textContent = ` ${msg.message}`;
 
   if (msg.username) {
