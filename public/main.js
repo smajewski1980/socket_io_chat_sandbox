@@ -48,7 +48,7 @@ socket.on("connection", (msg) => {
 
 socket.on("new-chat-message", (msg) => {
   const pElem = document.createElement("p");
-  // need to see if i can make each users own messages justify left
+  //make each users own messages justify left
   if (msg.joining) {
     pElem.classList.add("joining");
   } else if (msg.username === currUser) {
@@ -56,8 +56,6 @@ socket.on("new-chat-message", (msg) => {
   } else {
     pElem.classList.add("message");
   }
-  // msg.joining ? pElem.classList.add("joining") : pElem.classList.add("message");
-
   pElem.textContent = ` ${msg.message}`;
 
   if (msg.username) {
@@ -68,6 +66,7 @@ socket.on("new-chat-message", (msg) => {
   }
 
   messagesDiv.prepend(pElem);
+  messagesDiv.scrollTop = 0;
 });
 
 function updateAttendees(arr) {
