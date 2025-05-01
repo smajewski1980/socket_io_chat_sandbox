@@ -34,10 +34,6 @@ socket.on("connection", (msg) => {
   console.log("filtered list: " + filteredList);
   console.log("qty: " + qty);
 
-  connQtyElem.textContent = `there ${qty === 1 ? "is" : "are"} ${qty} ${
-    qty === 1 ? "user" : "users"
-  } in this room`;
-
   console.log(msg.msg);
   if (currentSocketId === null) {
     socket.emit("newUsername", {
@@ -72,7 +68,9 @@ function updateAttendees(arr) {
     return obj.room === currRoom;
   });
   const qty = filteredArr.length;
-  connQtyElem.textContent = `there are ${qty} users in the room`;
+  connQtyElem.textContent = `there ${qty === 1 ? "is" : "are"} ${qty} ${
+    qty === 1 ? "user" : "users"
+  } in this room`;
 
   filteredArr.forEach((user, idx) => {
     if (idx === filteredArr.length - 1) {
