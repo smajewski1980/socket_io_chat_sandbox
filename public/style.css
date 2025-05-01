@@ -31,13 +31,6 @@ h1 + p {
   margin-block: 0.5rem 1rem;
 }
 
-.messages {
-  margin-block: 1rem;
-  height: 250px;
-  overflow: auto;
-  outline: 2px solid var(--clr-dk-purp);
-}
-
 .current-users {
   margin-block: 1rem;
   min-height: 50px;
@@ -86,21 +79,34 @@ select {
   color: var(--clr-dk-purp-placeholder);
 }
 
+.messages {
+  margin-block: 1rem;
+  height: 250px;
+  overflow: auto;
+  outline: 2px solid var(--clr-dk-purp);
+}
+
 .message,
 .joining {
   background: var(--clr-lt-purp);
   margin: 0.5rem;
-  padding: 0.25rem 1rem;
+  padding: 0rem 1rem 0.3rem 1rem;
   line-height: 1.3;
   border-radius: 5px;
   text-align: left;
+  transition: all 0.3s cubic-bezier(0.175, 1, 0.32, 1.475);
 }
 
 .joining {
+  padding-block: 0.25rem 0.5rem;
   background-color: var(--clr-dk2-purp-low-Op);
   text-align: right;
   color: var(--clr-dk2-purp);
   opacity: 0.8;
+}
+
+.new-message {
+  margin-top: -2rem;
 }
 
 #username {

@@ -51,9 +51,11 @@ socket.on("new-chat-message", (msg) => {
   //make each users own messages justify left
   if (msg.joining) {
     pElem.classList.add("joining");
+    pElem.classList.add("new-message");
     pElem.textContent = `${msg.message}`;
   } else {
     pElem.classList.add("message");
+    pElem.classList.add("new-message");
     pElem.textContent = `: ${msg.message}`;
   }
 
@@ -65,6 +67,9 @@ socket.on("new-chat-message", (msg) => {
   }
 
   messagesDiv.prepend(pElem);
+  setTimeout(() => {
+    pElem.classList.remove("new-message");
+  }, 100);
   messagesDiv.scrollTop = 0;
 });
 
