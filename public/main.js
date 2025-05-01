@@ -51,17 +51,16 @@ socket.on("new-chat-message", (msg) => {
   //make each users own messages justify left
   if (msg.joining) {
     pElem.classList.add("joining");
-  } else if (msg.username === currUser) {
-    pElem.classList.add("my-msg");
+    pElem.textContent = `${msg.message}`;
   } else {
     pElem.classList.add("message");
+    pElem.textContent = `: ${msg.message}`;
   }
-  pElem.textContent = ` ${msg.message}`;
 
   if (msg.username) {
     const spanElem = document.createElement("span");
     spanElem.classList.add("msg-user-span");
-    spanElem.textContent = `${msg.username}:`;
+    spanElem.textContent = `${msg.username === currUser ? "me" : msg.username}`;
     pElem.prepend(spanElem);
   }
 
