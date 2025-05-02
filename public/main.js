@@ -25,16 +25,25 @@ function getQueryVariable(variable) {
   return false;
 }
 
+chatMessageInput.style.height = `${chatMessageInput.scrollHeight}px`;
+chatMessageInput.addEventListener("input", (event) => {
+  event.target.style.height = "auto";
+  event.target.style.height = `${event.target.scrollHeight}px`;
+});
+chatMessageInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendMessageToServer(e);
+    e.preventDefault();
+  }
+});
+
 currUserSpan.textContent = `Username: ${currUser}`;
 roomNameSpan.textContent = ` ${currRoom} `;
 
 socket.on("connection", (msg) => {
   const filteredList = msg.connQty.filter((msg) => msg.room === currRoom);
   const qty = filteredList.length;
-  console.log("filtered list: " + filteredList);
-  console.log("qty: " + qty);
 
-  console.log(msg.msg);
   if (currentSocketId === null) {
     socket.emit("newUsername", {
       userSocketId: msg.msg,
@@ -75,7 +84,7 @@ socket.on("new-chat-message", (msg) => {
 
 function updateAttendees(arr) {
   usersDiv.textContent = "";
-  console.log(arr);
+  // console.log(arr);
   const filteredArr = arr.filter((obj) => {
     return obj.room === currRoom;
   });
@@ -103,7 +112,9 @@ function handleLeave(e) {
 }
 
 btnLeave.addEventListener("click", handleLeave);
-btnSend.addEventListener("click", (e) => {
+btnSend.addEventListener("click", sendMessageToServer);
+
+function sendMessageToServer(e) {
   e.preventDefault();
   socket.emit("chat-message", {
     chatMsg: chatMessageInput.value,
@@ -111,5 +122,4 @@ btnSend.addEventListener("click", (e) => {
     room: currRoom,
   });
   chatMessageInput.value = "";
-  console.log("sending new chat message to server");
-});
+}

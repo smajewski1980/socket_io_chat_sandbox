@@ -61,7 +61,8 @@ button:focus-visible {
 }
 
 input,
-select {
+select,
+textarea {
   display: block;
   width: 100%;
   font-size: 1.125rem;
@@ -69,6 +70,10 @@ select {
   border: none;
   color: var(--clr-dk2-purp);
   outline: 1px solid var(--clr-dk-purp);
+}
+
+textarea {
+  resize: none;
 }
 
 select {
