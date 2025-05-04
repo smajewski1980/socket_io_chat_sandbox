@@ -122,4 +122,5 @@ function sendMessageToServer(e) {
     room: currRoom,
   });
   chatMessageInput.value = "";
+  chatMessageInput.style.height = "auto";
 }
